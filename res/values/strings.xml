@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">T9应用搜索</string>
+    <string name="msg">T9应用搜索\n输入拼音或拼音首字母</string>
     
     <string name="config_longAnimTime">100</string>
 

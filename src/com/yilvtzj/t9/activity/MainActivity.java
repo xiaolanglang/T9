@@ -7,6 +7,9 @@ import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.TextAppearanceSpan;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,7 +31,7 @@ import com.yilvtzj.t9.util.Util;
 public class MainActivity extends Activity implements OnItemClickListener, OnItemLongClickListener, OnTouchListener {
 
 	private GridView keyboard, apps;
-	private TextView content;
+	private TextView content, msgTv;
 
 	private StringBuilder builder = new StringBuilder(20);
 	private List<PInfo> resApps = new ArrayList<PInfo>(80);// 手机安装的所有非系统软件
@@ -101,6 +104,13 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		keyboard = (GridView) findViewById(R.id.keyboard);
 		content = (TextView) findViewById(R.id.content);
 		apps = (GridView) findViewById(R.id.apps);
+		msgTv = (TextView) findViewById(R.id.msg);
+
+		SpannableString styledText = new SpannableString(getString(R.string.msg));
+		styledText.setSpan(new TextAppearanceSpan(this, R.style.msg0), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		styledText.setSpan(new TextAppearanceSpan(this, R.style.msg1), 6, styledText.length(),
+				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		msgTv.setText(styledText, TextView.BufferType.SPANNABLE);
 
 		keyboard.setAdapter(new KeyboardGridAdapter(this));
 		keyboard.setOnItemClickListener(this);
@@ -138,6 +148,11 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 			builder.append(msg);
 		}
 		content.setText(builder.toString());
+		if ("".equals(builder.toString())) {
+			msgTv.setVisibility(View.VISIBLE);
+		} else {
+			msgTv.setVisibility(View.GONE);
+		}
 		showApps();
 	}
 

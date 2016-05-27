@@ -1,28 +1,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent" >
 
     <TextView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:clickable="true"
         android:ellipsize="end"
         android:gravity="center"
         android:padding="10dp"
         android:singleLine="true"
-        android:clickable="true"
         android:textColor="@android:color/white"
         android:textSize="24sp" />
 
     <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/keyboard"
-        android:layout_below="@+id/content" 
-        android:id="@+id/scroll" >
+        android:layout_below="@+id/content" >
 
         <com.yilvtzj.t9.view.NoScrolGridView
             android:id="@+id/apps"
@@ -36,6 +35,14 @@
             android:stretchMode="columnWidth"
             android:verticalSpacing="8dp" />
     </ScrollView>
+
+    <TextView
+        android:id="@+id/msg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/keyboard"
+        android:gravity="center"
+        android:textSize="20sp" />
 
     <com.yilvtzj.t9.view.NoScrolGridView
         android:id="@+id/keyboard"
