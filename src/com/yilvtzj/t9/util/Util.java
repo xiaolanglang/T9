@@ -1,6 +1,7 @@
 package com.yilvtzj.t9.util;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -67,6 +68,11 @@ public class Util {
 			case 'z':
 				builder.append(9);
 				break;
+			default:
+				if (isNumeric(String.valueOf(str))) {
+					builder.append(str);
+				}
+				break;
 			}
 		}
 		return builder.toString();
@@ -123,5 +129,10 @@ public class Util {
 		drawable.setBounds(0, 0, w, h);
 		drawable.draw(canvas);
 		return bitmap;
+	}
+
+	public static boolean isNumeric(CharSequence str) {
+		Pattern pattern = Pattern.compile("[0-9]*");
+		return pattern.matcher(str).matches();
 	}
 }

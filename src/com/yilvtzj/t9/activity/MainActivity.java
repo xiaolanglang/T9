@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.TextAppearanceSpan;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -62,7 +63,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 			break;
 		case MotionEvent.ACTION_UP:
 			if (close) {
-				stayInBack();
+				close();
 			}
 			break;
 		case MotionEvent.ACTION_MOVE:
@@ -76,6 +77,15 @@ public class MainActivity extends Activity implements OnTouchListener {
 	protected void onPause() {
 		super.onPause();
 		setData(-1);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			close();
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	private void initView() {
@@ -102,7 +112,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 
 			@Override
 			public void onClick(View v) {
-				stayInBack();
+				close();
 			}
 		});
 	}
@@ -130,7 +140,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		position = position + 1;
 		switch (position) {
 		case 10:
-			stayInBack();
+			close();
 			break;
 		case 12:
 			int l = builder.length();
@@ -235,24 +245,28 @@ public class MainActivity extends Activity implements OnTouchListener {
 				f = true;
 			}
 
+			if ("51CTO学院".equals(appName)) {
+				System.out.println(">>>");
+			}
+
 			if (f) {
 				PInfo newInfo = new PInfo();
-				newInfo.setAppname(p.applicationInfo.loadLabel(getPackageManager()).toString());
+				newInfo.setAppname(appName);
 				newInfo.setPname(p.packageName);
 				newInfo.setVersionName(p.versionName);
 				newInfo.setVersionCode(p.versionCode);
 				newInfo.setIcon(p.applicationInfo.loadIcon(getPackageManager()));
 				String quan = PinyinHelper.convertToPinyinString(newInfo.getAppname(), "", PinyinFormat.WITHOUT_TONE);
 				String shou = PinyinHelper.getShortPinyin(newInfo.getAppname());
-				quanpin.add(Util.zimuToShuzi(quan));
-				initials.add(Util.zimuToShuzi(shou));
+				quanpin.add(Util.zimuToShuzi(quan.toLowerCase()));
+				initials.add(Util.zimuToShuzi(shou.toLowerCase()));
 				resApps.add(newInfo);
 			}
 		}
 		canInput = true;
 	}
 
-	private void stayInBack() {
+	private void close() {
 		finish();
 		MainActivity.this.overridePendingTransition(android.R.anim.fade_in, R.anim.fade_out);
 	}
@@ -261,7 +275,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			stayInBack();
+			close();
 			Util.doStartAppWithPackageName(searchApps.get(position).getPname(), MainActivity.this);
 		}
 
