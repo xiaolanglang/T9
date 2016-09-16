@@ -3,6 +3,14 @@ package com.yilvtzj.t9.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.jpinyin.PinyinFormat;
+import com.github.jpinyin.PinyinHelper;
+import com.yilvtzj.t9.R;
+import com.yilvtzj.t9.adapter.AppsGridAdapter;
+import com.yilvtzj.t9.adapter.KeyboardGridAdapter;
+import com.yilvtzj.t9.entity.PInfo;
+import com.yilvtzj.t9.util.Util;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
@@ -19,14 +27,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.TextView;
-
-import com.github.jpinyin.PinyinFormat;
-import com.github.jpinyin.PinyinHelper;
-import com.yilvtzj.t9.R;
-import com.yilvtzj.t9.adapter.AppsGridAdapter;
-import com.yilvtzj.t9.adapter.KeyboardGridAdapter;
-import com.yilvtzj.t9.entity.PInfo;
-import com.yilvtzj.t9.util.Util;
 
 public class MainActivity extends Activity implements OnTouchListener {
 
@@ -243,10 +243,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 					|| "计算器".equals(appName) || "日历".equals(appName) || "便签".equals(appName) || "时钟".equals(appName)
 					|| "相册".equals(appName) || "天气".equals(appName) || "录音".equals(appName)) {
 				f = true;
-			}
-
-			if ("51CTO学院".equals(appName)) {
-				System.out.println(">>>");
 			}
 
 			if (f) {
