@@ -19,12 +19,11 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.TextAppearanceSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -105,7 +104,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 		gridAdapter = new AppsGridAdapter(this);
 		gridAdapter.setList(searchApps);
 		apps.setAdapter(gridAdapter);
-		apps.setOnItemClickListener(new AppsOnItemClickListener());
 
 		findViewById(R.id.scroll).setOnTouchListener(this);
 		content.setOnClickListener(new View.OnClickListener() {
@@ -226,55 +224,49 @@ public class MainActivity extends Activity implements OnTouchListener {
 
 			@Override
 			public void run() {
+				long time = System.currentTimeMillis();
 				getInstalledApps();
+				Log.e(">>", "" + (System.currentTimeMillis() - time));
 			}
 		}).start();
 	}
 
 	private void getInstalledApps() {
 		List<PackageInfo> packs = getPackageManager().getInstalledPackages(0);
-		for (int i = 0; i < packs.size(); i++) {
+		Log.e(">", "sum:" + packs.size());
+		for (int i = 0, l = packs.size(); i < l; i++) {
 			PackageInfo p = packs.get(i);
+			if ((p.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+				continue;
+			}
 			String appName = p.applicationInfo.loadLabel(getPackageManager()).toString();
-			boolean f = false;
-			if ((p.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-				f = true;
-			} else if ("相机".equals(appName) || "浏览器".equals(appName) || "音乐".equals(appName) || "设置".equals(appName)
-					|| "计算器".equals(appName) || "日历".equals(appName) || "便签".equals(appName) || "时钟".equals(appName)
-					|| "相册".equals(appName) || "天气".equals(appName) || "录音".equals(appName)) {
-				f = true;
-			}
+			// else if ("相机".equals(appName) || "浏览器".equals(appName) ||
+			// "音乐".equals(appName) || "设置".equals(appName)
+			// || "计算器".equals(appName) || "日历".equals(appName) ||
+			// "便签".equals(appName) || "时钟".equals(appName)
+			// || "相册".equals(appName) || "天气".equals(appName) ||
+			// "录音".equals(appName)) {
+			// f = true;
+			// }
 
-			if (f) {
-				PInfo newInfo = new PInfo();
-				newInfo.setAppname(appName);
-				newInfo.setPname(p.packageName);
-				newInfo.setVersionName(p.versionName);
-				newInfo.setVersionCode(p.versionCode);
-				newInfo.setIcon(p.applicationInfo.loadIcon(getPackageManager()));
-				String quan = PinyinHelper.convertToPinyinString(newInfo.getAppname(), "", PinyinFormat.WITHOUT_TONE);
-				String shou = PinyinHelper.getShortPinyin(newInfo.getAppname());
-				quanpin.add(Util.zimuToShuzi(quan.toLowerCase()));
-				initials.add(Util.zimuToShuzi(shou.toLowerCase()));
-				resApps.add(newInfo);
-			}
+			PInfo newInfo = new PInfo();
+			newInfo.setAppname(appName);
+			newInfo.setPname(p.packageName);
+			newInfo.setVersionName(p.versionName);
+			newInfo.setVersionCode(p.versionCode);
+			newInfo.setIcon(p.applicationInfo.loadIcon(getPackageManager()));
+			String quan = PinyinHelper.convertToPinyinString(newInfo.getAppname(), "", PinyinFormat.WITHOUT_TONE);
+			String shou = PinyinHelper.getShortPinyin(newInfo.getAppname());
+			quanpin.add(Util.zimuToShuzi(quan.toLowerCase()));
+			initials.add(Util.zimuToShuzi(shou.toLowerCase()));
+			resApps.add(newInfo);
 		}
 		canInput = true;
 	}
 
-	private void close() {
+	public void close() {
 		finish();
 		MainActivity.this.overridePendingTransition(android.R.anim.fade_in, R.anim.fade_out);
-	}
-
-	private class AppsOnItemClickListener implements OnItemClickListener {
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			close();
-			Util.doStartAppWithPackageName(searchApps.get(position).getPname(), MainActivity.this);
-		}
-
 	}
 
 }
